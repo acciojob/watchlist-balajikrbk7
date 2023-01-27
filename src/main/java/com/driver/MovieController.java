@@ -1,58 +1,65 @@
 package com.driver;
-
+import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class MovieController {
     @Autowired
-    MovieService movieService;
+    MovieService service;
 
-    @PostMapping("/movies/add-movie")
-    public ResponseEntity addMovie(@RequestBody Movie movie) {
-        return movieService.add_Movie(movie);
+    @PostMapping("/addMovie")
+    public ResponseEntity<String> addMovie(@RequestBody() Movie movie) {
+        service.addMovie(movie);
+        return new ResponseEntity("Added success", HttpStatus.OK);
     }
 
-    @PostMapping("/movies/add-director")
-    public ResponseEntity addDirector(@RequestBody Director director) {
-        return movieService.add_Director(director);
+    @PostMapping("/addDirector")
+    public ResponseEntity<String> addDirector(@RequestBody() Director director) {
+        service.addDirector(director);
+        return new ResponseEntity("Success", HttpStatus.OK);
     }
 
-    @PutMapping("/movies/add-movie-director-pair")
-    public ResponseEntity addMovieDirectorPair(@RequestParam("movieName") String movieName, @RequestParam("dirName") String dirName) {
-        return movieService.add_MovieDirectorPair(movieName, dirName);
+    @PutMapping("/addMovieDirectorPair")
+    public ResponseEntity<String> addMovieDirectorPair(@RequestBody() RequestDTO dto) {
+        service.addpair(dto);
+        return new ResponseEntity("success", HttpStatus.OK);
     }
 
-    @GetMapping("/movies/get-movie-by-name/{name}")
-    public ResponseEntity getMovieByName(@PathVariable("name") String name) {
-        return movieService.get_MovieByName(name);
+    @GetMapping("/getMovieByName")
+    public ResponseEntity<Movie> getMovieByName(@RequestParam("name") String moviename) {
+        Movie ans = service.getmovie(moviename);
+        return new ResponseEntity(ans, HttpStatus.OK);
     }
 
-    @GetMapping("/movies/get-director-by-name/{name}")
-    public ResponseEntity getDirectorByName(@PathVariable("name") String name) {
-        return movieService.get_DirectorByName(name);
+    @GetMapping("/getDirectorByName")
+    public ResponseEntity<Director> getDirectorByName(@RequestParam("name") String directorname) {
+        Director ans = service.getdirector(directorname);
+        return new ResponseEntity(ans, HttpStatus.OK);
     }
 
-    @GetMapping("/movies/get-movies-by-director-name/{director}")
-    public ResponseEntity getMoviesByDirectorName(@PathVariable("director") String dirName) {
-        return movieService.get_MoviesByDirectorName(dirName);
+    @GetMapping("/getMoviesByDirectorName")
+    public ResponseEntity<List<String>> getMoviesByDirectorName(@RequestParam("name") String directorname) {
+        List<String> ans = service.getList(directorname);
+        return new ResponseEntity(ans, HttpStatus.OK);
     }
 
-    @GetMapping("/movies/get-all-movies")
-    public ResponseEntity findAllMovies() {
-        return movieService.find_AllMovies();
+    @GetMapping("/findAllMovies")
+    public ResponseEntity<List<Movie>> findAllMovies() {
+        List<Movie> ans = service.getmovies();
+        return new ResponseEntity(ans, HttpStatus.OK);
     }
 
-    @DeleteMapping("/movies/delete-director-by-name")
-    public ResponseEntity deleteDirectorByName(@RequestParam("dirName") String dirName) {
-        return movieService.delete_DirectorByName(dirName);
+    @GetMapping("/deleteDirectorByName")
+    public ResponseEntity<String> deleteDirectorByName(@RequestParam("name") String directorname){
+        service.deldirector(directorname);
+        return new ResponseEntity("success",HttpStatus.OK);
     }
-
-    @DeleteMapping(" /movies/delete-all-directors")
-    public ResponseEntity deleteAllDirectors() {
-        return movieService.delete_AllDirectors();
+    @GetMapping("/deleteAllDirectors")
+    public ResponseEntity<String> deleteAllDirectors(){
+        service.deleteall();
+        return new ResponseEntity("success",HttpStatus.OK);
     }
-
-
 }
