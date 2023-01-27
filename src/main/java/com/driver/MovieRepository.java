@@ -1,79 +1,60 @@
 package com.driver;
-
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
-
 @Repository
 public class MovieRepository {
-    List<Movie> moviesList = new ArrayList<>();
-    List<Director> directorList = new ArrayList<>();
 
-    HashMap<String, List<String>> dirMoviePair = new HashMap<>();
-    public boolean add_Movie(Movie movie) {
-        moviesList.add(movie);
-        return true;
+    HashMap<String,Movie> movies = new HashMap<>();
+    HashMap<String,Director> directors = new HashMap<>();
+    HashMap<String,List<Movie>> pairs = new HashMap<>();
+
+    public void addMovie(Movie movie){
+        movies.put(movie.getName(),movie);
     }
-
-    public boolean add_Director(Director director) {
-        directorList.add(director);
-        return true;
+    public void addDirector(Director director){
+        directors.put(director.getName(),director);
     }
-
-    public boolean add_MovieDirectorPair(String movieName, String dirName) {
-        if(dirMoviePair.containsKey(dirName)) {
-            dirMoviePair.get(dirName).add(movieName);
-        } else {
-            List<String> list = new ArrayList<>();
-            list.add(movieName);
-            dirMoviePair.put(dirName, list);
+    public void addpair(RequestDTO dto){
+        if(pairs.containsKey(dto.getDirectorname())){
+            pairs.get(dto.getDirectorname()).add(movies.get(dto.getMoviename()));
         }
-
-        return true;
-    }
-
-    public Movie get_MovieByName(String name) {
-        for(Movie m : moviesList) {
-            if(m.getName().equals(name)) {
-                return m;
-            }
+        else{
+            List<Movie> arr = new ArrayList<>();
+            arr.add(movies.get(dto.getMoviename()));
+            pairs.put(dto.getDirectorname(),arr);
         }
-        return null;
     }
-
-    public Director get_DirectorByName(@PathVariable String name) {
-        for(Director d : directorList) {
-            if(d.getName().equals(name))
-                return d;
+    public Movie getmovie(String moviename){
+        return movies.get(moviename);
+    }
+    public Director getdirector(String directorname){
+        return directors.get(directorname);
+    }
+    public List<String> getlist(String directorname){
+        List<String> ans = new ArrayList<>();
+        for(Movie x:pairs.get(directorname)){
+            ans.add(x.getName());
         }
-        return null;
+        return ans;
     }
-
-    public List<String> get_MoviesByDirectorName(@PathVariable String dirName) {
-        return dirMoviePair.get(dirName);
-    }
-
-    public List<Movie> find_AllMovies() {
-        return moviesList;
-    }
-
-    public boolean delete_DirectorByName(@RequestParam String dirName) {
-        for(int i = 0; i < directorList.size(); i ++) {
-            if(directorList.get(i).getName().equals(dirName)) {
-                directorList.remove(i);
-                break;
-            }
+    public List<Movie> getmovies(){
+        List<Movie> ans = new ArrayList<>();
+        for(String x : movies.keySet()){
+            ans.add(movies.get(x));
         }
-        return true;
+        return ans;
+    }
+    public void deldirector(String directorname){
+        for(Movie m: pairs.get(directorname)){
+            movies.remove(m.getName());
+        }
+        pairs.remove(directorname);
+    }
+    public void deleteall(){
+        movies = new HashMap<>();
+        directors = new HashMap<>();
+        pairs = new HashMap<>();
     }
 
-    public boolean delete_AllDirectors() {
-        directorList = new ArrayList<>();
-        return true;
-    }
 }
