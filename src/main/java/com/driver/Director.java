@@ -1,12 +1,26 @@
 package com.driver;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class Director {
-    private String name;
-    private int numberOfMovies;
-   private double imdbRating;
+    public String name;
+    public  int numberOfMovies;
+    public  double imdbRating;
+    Director(){}
+    public   Director(String name,int numberOfMovies, double imdbRating)
+    {
+        this.name=name;
+        this.numberOfMovies = numberOfMovies;
+        this.imdbRating = imdbRating;
+    }
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public int getNumberOfMovies() {
@@ -17,24 +31,11 @@ public class Director {
         this.numberOfMovies = numberOfMovies;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public double getImdbRating() {
         return imdbRating;
     }
 
     public void setImdbRating(double imdbRating) {
         this.imdbRating = imdbRating;
-    }
-
-    public Director(String name, double imdbRating,int numberOfMovies) {
-        this.name = name;
-        this.imdbRating = imdbRating;
-        this.numberOfMovies = numberOfMovies;
-    }
-
-    public Director() {
     }
 }
