@@ -1,37 +1,51 @@
 package com.driver;
-import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class MovieService {
+
     @Autowired
-    MovieRepository repository;
-    public void addMovie(Movie movie){
-        repository.addMovie(movie);
+    public MovieRepository movieRepository;
+
+    public  void addMovie(Movie movie) {movieRepository.addMovie(movie);}
+
+    public  void addDirector(Director director) {
+        movieRepository.addDirector(director);
     }
-    public void addDirector(Director director){
-        repository.addDirector(director);
+
+    public void addMovieDirectorPair(String movieName, String directorName) {
+        movieRepository.addMovieDirectorPair(movieName,directorName);
     }
-    public void addpair(RequestDTO dto){
-        repository.addpair(dto);
+    public  Movie getMovieByName(String searchMovie) {
+        return movieRepository.getMovieByName(searchMovie);
     }
-    public Movie getmovie(String moviename){
-        return repository.getmovie(moviename);
+
+    public  Director getDirectorByName(String searchDirector) {
+        return movieRepository.getDirectorByName(searchDirector);
     }
-    public Director getdirector(String directorname){
-        return repository.getdirector(directorname);
+
+    //6
+    public List<String> getMoviesByDirectorName(String director) {
+        return (List<String>) movieRepository.getMoviesByDirectorName(director);
     }
-    public List<String> getList(String directorname){
-        return repository.getlist(directorname);
+    //7
+    public List<String> findAllMovies() {
+        return movieRepository.findAllMovies();
     }
-    public List<Movie> getmovies(){
-        return repository.getmovies();
+
+    //8
+    public  String deleteDirectorByName(String searchDirector) {
+
+        return   movieRepository.deleteDirectorByName(searchDirector);
     }
-    public void deldirector(String directorname){
-        repository.deldirector(directorname);
+    //9
+    public void deleteAllDirectors() {
+        movieRepository.deleteAllDirectors();
     }
-    public void deleteall(){
-        repository.deleteall();
-    }
+
+
 }
